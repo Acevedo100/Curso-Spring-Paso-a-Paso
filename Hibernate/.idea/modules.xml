@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Hibernate.iml" filepath="$PROJECT_DIR$/.idea/Hibernate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Base Hibernate/hibernate-jpa.iml" filepath="$PROJECT_DIR$/Base Hibernate/hibernate-jpa.iml" />
     </modules>
   </component>
 </project>

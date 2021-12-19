@@ -1,17 +1,34 @@
 package com.springsimplespasos.universidad.universidadbackend.modelo.entidades;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "personas")
 public abstract class Persona implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
+    @Column(nullable = false, length = 60)
     private  String nombre;
+    @Column(nullable = false, length = 60 )
     private String apellido;
+    @Column(nullable = false, unique = true, length = 10)
     private String dni;
+    @Column(name = "fecha_alta")
     private LocalDateTime fechaAlta;
-    private LocalDateTime fechaUltimaModificacion;
+    @Column(name = "fecha_modificacion")
+    private LocalDateTime fechaModificacion;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "codigoPostal", column = @Column(name = "codigo_postal")), // Refactorizamos el atrubuto con nuevo nombre dentro de la tabla.
+            @AttributeOverride(name = "dpto", column = @Column(name = "departamento"))           // primer parametro el nombre de la cariable, segundo el nombre que queremos darle al atributo.
+    }
+    )
     private Direccion direccion;
 
     public Persona() {
@@ -65,12 +82,12 @@ public abstract class Persona implements Serializable {
         this.fechaAlta = fechaAlta;
     }
 
-    public LocalDateTime getFechaUltimaModificacion() {
-        return fechaUltimaModificacion;
+    public LocalDateTime getFechaModificacion() {
+        return fechaModificacion;
     }
 
-    public void setFechaUltimaModificacion(LocalDateTime fechaUltimaModificacion) {
-        this.fechaUltimaModificacion = fechaUltimaModificacion;
+    public void setFechaModificacion(LocalDateTime fechaUltimaModificacion) {
+        this.fechaModificacion = fechaUltimaModificacion;
     }
 
     public Direccion getDireccion() {
@@ -81,6 +98,16 @@ public abstract class Persona implements Serializable {
         this.direccion = direccion;
     }
 
+    @PrePersist
+    private void antesDePersistir(){
+        this.fechaAlta = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void antesDeUpdate(){
+        this.fechaModificacion = LocalDateTime.now();
+    }
+
     @Override
     public String toString() {
         return "Persona{" +
@@ -89,7 +116,7 @@ public abstract class Persona implements Serializable {
                 ", apellido='" + apellido + '\'' +
                 ", dni='" + dni + '\'' +
                 ", fechaAlta=" + fechaAlta +
-                ", fechaUltimaModificacion=" + fechaUltimaModificacion +
+                ", fechaUltimaModificacion=" + fechaModificacion +
                 ", direccion=" + direccion +
                 '}';
     }

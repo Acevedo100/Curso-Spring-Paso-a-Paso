@@ -1,6 +1,6 @@
 package com.springsimplespasos.universidad.universidadbackend.modelo.entidades.enumeradores;
 
-public enum Pizarra {
+public enum Pizarron {
 
     PIZARRA_TIZA,
     PIZARRA_BLANCA

@@ -1,6 +1,5 @@
 package com.springsimplespasos.universidad.universidadbackend.modelo.entidades;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -8,43 +7,44 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "pabellones")
-public class Pabellon implements Serializable {
+@Table(name = "carreras")
+public class Carrera implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "metros_cuadrados")
-    private Double mts2;
-    @Column(name = "nombre_pabellon", unique = true, nullable = false)
+    @Column(nullable = false, unique = true, length = 80)
     private String nombre;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "codigoPostal", column = @Column(name = "codigo_postal")), // Refactorizamos el atrubuto con nuevo nombre dentro de la tabla.
-            @AttributeOverride(name = "dpto", column = @Column(name = "departamento"))           // primer parametro el nombre de la cariable, segundo el nombre que queremos darle al atributo.
-            }
-    )
-    private Direccion direccion;
+    @Column(name = "cantidad_materias")
+    private Integer cantidadMaterias;
+    @Column(name = "cantidad_anios")
+    private Integer cantidadAnios;
     @Column(name = "fecha_alta")
     private LocalDateTime fechaAlta;
-    @Column(name = "fecha_modificacion")
+    @Column(name = "fecha_modiciacion")
     private LocalDateTime fechaModificacion;
 
     @OneToMany(
-        mappedBy = "pabellon",
-        fetch = FetchType.LAZY  // Carga Lazy para no generar tanta demanda a la BD
-    )
-    private Set<Aula> aulas;
+            mappedBy = "carrera",
+            fetch = FetchType.LAZY
 
-    public Pabellon() {
+    )
+    private Set<Alumno> alumno;
+
+    @ManyToMany(
+            mappedBy = "carreras",
+            fetch = FetchType.LAZY
+    )
+    private Set<Profesor> profesores;
+
+    public Carrera() {
     }
 
-
-    public Pabellon(Integer id, Double mts2, String nombre, Direccion direccion) {
+    public Carrera(Integer id, String nombre, Integer cantidadMaterias, Integer cantidadAnios) {
         this.id = id;
-        this.mts2 = mts2;
         this.nombre = nombre;
-        this.direccion = direccion;
+        this.cantidadMaterias = cantidadMaterias;
+        this.cantidadAnios = cantidadAnios;
     }
 
     public Integer getId() {
@@ -55,14 +55,6 @@ public class Pabellon implements Serializable {
         this.id = id;
     }
 
-    public Double getMts2() {
-        return mts2;
-    }
-
-    public void setMts2(Double mts2) {
-        this.mts2 = mts2;
-    }
-
     public String getNombre() {
         return nombre;
     }
@@ -71,12 +63,20 @@ public class Pabellon implements Serializable {
         this.nombre = nombre;
     }
 
-    public Direccion getDireccion() {
-        return direccion;
+    public Integer getCantidadMaterias() {
+        return cantidadMaterias;
     }
 
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
+    public void setCantidadMaterias(Integer cantidadMaterias) {
+        this.cantidadMaterias = cantidadMaterias;
+    }
+
+    public Integer getCantidadAnios() {
+        return cantidadAnios;
+    }
+
+    public void setCantidadAnios(Integer cantidadAnios) {
+        this.cantidadAnios = cantidadAnios;
     }
 
     public LocalDateTime getFechaAlta() {
@@ -95,12 +95,20 @@ public class Pabellon implements Serializable {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public Set<Aula> getAulas() {
-        return aulas;
+    public Set<Alumno> getAlumno() {
+        return alumno;
     }
 
-    public void setAulas(Set<Aula> aulas) {
-        this.aulas = aulas;
+    public void setAlumno(Set<Alumno> alumno) {
+        this.alumno = alumno;
+    }
+
+    public Set<Profesor> getProfesores() {
+        return profesores;
+    }
+
+    public void setProfesores(Set<Profesor> profesores) {
+        this.profesores = profesores;
     }
 
     @PrePersist
@@ -115,13 +123,13 @@ public class Pabellon implements Serializable {
 
     @Override
     public String toString() {
-        return "Pabellon{" +
+        return "Carrera{" +
                 "id=" + id +
-                ", mts2=" + mts2 +
                 ", nombre='" + nombre + '\'' +
-                ", direccion=" + direccion +
+                ", cantidadMaterias=" + cantidadMaterias +
+                ", cantidadAnios=" + cantidadAnios +
                 ", fechaAlta=" + fechaAlta +
-                ", fechaUltimaModificacion=" + fechaModificacion +
+                ", fechaModificacion=" + fechaModificacion +
                 '}';
     }
 
@@ -129,8 +137,8 @@ public class Pabellon implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pabellon pabellon = (Pabellon) o;
-        return id.equals(pabellon.id) && nombre.equals(pabellon.nombre);
+        Carrera carrera = (Carrera) o;
+        return id.equals(carrera.id) && nombre.equals(carrera.nombre);
     }
 
     @Override

@@ -2,12 +2,12 @@ package com.springsimplespasos.universidad.universidadbackend.servicios.contrato
 
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Carrera;
 
-import java.util.Optional;
+//Se encuentra sin nada, ya que al extender de GenericoDAO< Clase que se quiere tocar>, implementa esos metodos
+public interface CarreraDAO extends GenericoDAO<Carrera>{
 
-public interface CarreraDAO {
 
-    Optional<Carrera> findById(Integer id);
-    Carrera save (Carrera carrera);
-    Iterable<Carrera> findAll();
-    void deleteById (Integer id);
+    Iterable<Carrera> findCarreraByNombreContains(String nombre);
+    Iterable<Carrera> findCarreraByNombreContainsIgnoreCase(String nombre);
+    Iterable<Carrera> findCarreraByCantidadAniosAfter(Integer cantidadAnios);
+
 }

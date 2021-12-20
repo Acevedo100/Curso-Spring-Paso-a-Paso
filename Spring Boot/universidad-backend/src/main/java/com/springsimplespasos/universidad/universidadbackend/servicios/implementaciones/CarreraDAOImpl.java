@@ -7,38 +7,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
+// Implementamos los metoddos  para darle funcionalidad de la interfaz CarreraDAO
+// Extiende de GenericoDAOimpl enviando como parametro la clase que se quiere ocupar + y el repositorio que creamos para esa clase.
 
 @Service
-public class CarreraDAOImpl  implements CarreraDAO {
+public class CarreraDAOImpl extends GenericoDAOImpl<Carrera,CarreraRepository> implements CarreraDAO {
 
     @Autowired
-    private CarreraRepository repository;
+    public CarreraDAOImpl(CarreraRepository repository) {
+        super(repository);
+    }
+
+    @Override
+    @Transactional(readOnly = true) // Especifica que este metodo es solo de busqueda.
+    public Iterable<Carrera> findCarreraByNombreContains(String nombre) {
+        return repository.findCarreraByNombreContains(nombre) ;
+    }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Carrera> findById(Integer id) {
-        return repository.findById(id);
+    public Iterable<Carrera> findCarreraByNombreContainsIgnoreCase(String nombre) {
+        return repository.findCarreraByNombreContainsIgnoreCase(nombre);
     }
 
     @Override
-    @Transactional
-    public Carrera save(Carrera carrera) {
-        return repository.save(carrera);
-    }
-
     @Transactional(readOnly = true)
-    @Override
-    public Iterable<Carrera> findAll() {
-        return repository.findAll();
+    public Iterable<Carrera> findCarreraByCantidadAniosAfter(Integer cantidadAnios) {
+        return repository.findCarreraByCantidadAniosAfter(cantidadAnios);
     }
-
-    @Override
-    @Transactional
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
-    }
-
-
 }
